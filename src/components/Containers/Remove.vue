@@ -44,9 +44,11 @@ export default {
     remove: async function () {
       this.dialog = false
 
-      var client = await this.getClient()
+      var client = await this.$store.getters.apiClient
 
-      await client.container.container_remove({id: this.cid})
+      await client.apis.container.container_remove({id: this.cid, force: this.checked})
+
+      this.$store.dispatch('fetchContainers')
     }
   }
 }

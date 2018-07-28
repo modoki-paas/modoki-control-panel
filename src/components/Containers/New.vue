@@ -68,9 +68,9 @@ export default {
       this.$router.push('.')
     },
     submit: async function () {
-      var client = await this.getClient()
+      var client = await this.$store.getters.apiClient
 
-      client.container.container_create({
+      client.apis.container.container_create({
         name: this.name,
         image: this.image,
         command: this.command.split(',')

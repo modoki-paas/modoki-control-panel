@@ -37,7 +37,7 @@
         </v-flex>
 
         <v-flex xs12 sm3>
-          <v-card class="white--text" height="100%" v-bind:color="{red: errorCount!=0, grey:errorCount==0, 'lighten-1': true}">
+          <v-card class="white--text" height="100%" v-bind:color="(errorCount==0?'grey':'red') +  ' lighten-1'">
             <v-card-title class="pa-2">
                 <v-flex md12 justify-center>
                   <div class="headline" >Error</div>
@@ -58,10 +58,10 @@
     <v-container fluid>
       <v-layout d-block justify-start>
         <div class="subheading">
-          <p>Thank you for using <a src="https://github.com/cs3238-tsuzu/modoki">modoki</a>!</p>
+          <p>Thank you for using <a href="https://github.com/cs3238-tsuzu/modoki">modoki</a>!</p>
           <p>This project is still in development.</p>
           <p>We welcome your contribution to this project.</p>
-          <p>The reference is <a src="https://github.com/cs3238-tsuzu/modoki">here</a></p>
+          <p>The reference is <a href="https://github.com/cs3238-tsuzu/modoki">here</a></p>
         </div>
       </v-layout>
     </v-container>
@@ -77,20 +77,10 @@ export default {
     }
   },
   created () {
-    this.fetchContainers()
+    this.$store.dispatch('fetchContainers')
   },
   methods: {
-    fetchContainers: async function () {
-      // console.log(this.client)
 
-      var client = await this.getClient()
-      const res = await client.apis.container.container_list()
-      const fetchRes = await fetch(URL.createObjectURL(res.data))
-      const data = await fetchRes.json()
-
-      this.$store.commit('setContainers', data)
-      this.loading = false
-    }
   },
   computed: {
     createdCount: function () {

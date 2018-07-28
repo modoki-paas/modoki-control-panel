@@ -9,7 +9,7 @@
       <h1>Containers</h1>
       <v-btn
         icon
-        @click.stop="fetchContainers()"
+        @click.stop="$store.dispatch('fetchContainers')"
         >
         <v-icon>cached</v-icon>
       </v-btn>
@@ -35,7 +35,13 @@
             <td>{{ props.item.command }}</td>
             <td>{{ props.item.status }}</td>
             <td class="px-0">
-              <container-config :cid="props.item.cid"></container-config>
+              <v-icon
+                small
+                class="mr-2"
+              >
+                play_arrow
+              </v-icon>
+              <container-config :cid="props.item.id"></container-config>
               <v-icon
                 small
                 class="mr-2"
@@ -43,7 +49,7 @@
               >
                 tv
               </v-icon>
-              <container-remove :cid="props.item.cid" :name="props.item.name"></container-remove>
+              <container-remove :cid="props.item.id" :name="props.item.name"></container-remove>
             </td>
           </template>
           <template slot="no-data"></template>
@@ -63,23 +69,10 @@ export default {
     'container-config': ContainerConfig,
     'container-remove': ContainerRemove
   },
-  methods: {
-    fetchContainers: async function () {
-      // console.log(this.client)
-      this.loading = true
-
-      var client = await this.getClient()
-      const res = this.asJSON(await client.apis.container.container_list())
-
-      console.dir(res)
-
-      this.$store.commit('setContainers', res)
-      this.loading = false
-    }
+  created: function () {
+    this.$store.dispatch('fetchContainers')
   },
   data () {
-    this.fetchContainers()
-
     return {
       loading: false,
       pagination: {},

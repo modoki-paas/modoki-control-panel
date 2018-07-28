@@ -27,26 +27,54 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="blue darken-1" flat @click.native="dialog = false">Close</v-btn>
-        <v-btn color="blue darken-1" flat @click.native="dialog = false">Save</v-btn>
+        <v-btn color="blue darken-1" flat @click.native="submit()">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import Util from '../../Util'
+
 export default {
   props: ['cid'],
   created: async function () {
-    var client = await this.getClient()
-
-    const res = this.asJSON(await client.container.container_getConfig({id: this.cid}))
-
-    this.defaultShell = res.defaultShell
+    await this.updateConfig()
   },
-  data: () => ({
-    dialog: false,
-    dafaultShell: ''
-  })
+  data: () => {
+    return {
+      dialog: false,
+      defaultShell: ''
+    }
+  },
+  watch: {
+    async dialog (val) {
+      if (val) {
+        await this.updateConfig()
+      }
+    }
+  },
+  methods: {
+    async updateConfig () {
+      var client = await this.$store.getters.apiClient
+
+      const res = await Util.asJSON(await client.apis.container.container_getConfig({id: this.cid}))
+
+      this.defaultShell = res.defaultShell
+    },
+    async submit () {
+      this.dialog = false
+
+      var client = await this.$store.getters.apiClient
+
+      await client.apis.container.container_setConfig({
+        id: this.cid,
+        payload: {
+          defaultShell: this.defaultShell
+        }
+      })
+    }
+  }
 
 }
 </script>

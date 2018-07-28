@@ -111,6 +111,7 @@ export default {
   name: 'Setting',
   data () {
     return {
+      defaultShell: '',
       containers: {
         data: [
           {
