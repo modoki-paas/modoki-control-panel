@@ -5,6 +5,7 @@ import Containers from '@/components/Containers'
 import NotFound from '@/components/NotFound'
 import NewContainer from '@/components/Containers/New'
 import Setting from '@/components/Setting'
+import Login from '@/components/Login'
 
 Vue.use(Router)
 
@@ -29,6 +30,11 @@ export default new Router({
       path: '/setting',
       name: 'setting',
       component: Setting
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
     },
     {
       path: '*',

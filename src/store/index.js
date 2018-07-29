@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import Swagger from 'swagger-client'
-import Util from './Util'
+import Util from '../Util'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -39,6 +39,16 @@ export default new Vuex.Store({
 
       console.log(Swagger.SwaggerClient)
       Swagger.http.withCredentials = true
+
+      Swagger.http({
+        responseInterceptor: (res) => {
+          if (res.status === 401) { // Unauthorized
+            this.state.route.push('/login')
+          }
+
+          return res
+        }
+      })
 
       var client = await Swagger(
         swaggerPath,

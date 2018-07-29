@@ -2,7 +2,9 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/httputil"
@@ -30,6 +32,7 @@ var (
 	https       = flag.Bool("https", true, "Enable HTTPS")
 	dir         = flag.String("dir", "./", "Path to serve files")
 	debug       = flag.String("debug", "", "Redirection for debug(XXX.XXX.XXX.XXX:8080)")
+	authConfig  = flag.String("auth", "/auth/authconfig.json", "path to authconfig.json")
 	help        = flag.Bool("help", false, "Show this")
 )
 
@@ -59,10 +62,40 @@ func main() {
 		return
 	}
 
+	var config []map[string]interface{}
+	var jsonRawBytes []byte
+
+	if fp, err := os.Open(*authConfig); err != nil {
+		log.Fatal("Opening auth config error: ", err)
+	} else {
+		jsonRawBytes, err = ioutil.ReadAll(fp)
+
+		if err != nil {
+			log.Fatal("Reading auth config error: ", err)
+		}
+
+		if err := json.Unmarshal(jsonRawBytes, &config); err != nil {
+			log.Fatal("Invalid auth config format: ", err)
+		}
+	}
+
 	consul := consulInit()
 	defer finalize(consul)
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/web/authconfig.json", func(rw http.ResponseWriter, req *http.Request) {
+		if req.Method != "GET" {
+			rw.WriteHeader(http.StatusNotFound)
+			rw.Write([]byte("Not Found"))
+
+			return
+		}
+
+		rw.Header().Set("Content-Type", "application/json")
+		rw.Write(jsonRawBytes)
+		return
+	})
 
 	mux.HandleFunc("/", func(rw http.ResponseWriter, req *http.Request) {
 		rw.Header().Add("Location", "/web/")
