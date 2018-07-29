@@ -68,9 +68,24 @@
     </v-toolbar-items>
   </v-toolbar>
   <v-content class="pt-0">
+    <v-layout column align-space-around>
+    <v-flex xs12>
+      <v-alert
+        :value="true"
+        type="error"
+        dismissible
+        v-model="errorAlertShown"
+      >
+        {{$store.state.error}}
+      </v-alert>
+    </v-flex>
+
+    <v-flex xs12>
     <v-container>
       <router-view></router-view>
     </v-container>
+    </v-flex>
+    </v-layout>
     <logout-dialog :logoutDialog=logoutDialog @close="closeEvent"></logout-dialog>
   </v-content>
   <v-footer app>
@@ -103,6 +118,18 @@ export default {
     closeEvent: function (event) {
       console.log(event)
       this.logoutDialog = false
+    }
+  },
+  computed: {
+    errorAlertShown: {
+      get: function () {
+        return this.$store.state.error.length !== 0
+      },
+      set: function (val) {
+        if (!val) {
+          this.$store.commit('clearError')
+        }
+      }
     }
   }
 }

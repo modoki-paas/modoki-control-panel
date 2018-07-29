@@ -1,4 +1,4 @@
-DOCKER_IMAGE_NAME = tsuzu/modoki-control-panel
+DOCKER_IMAGE_NAME = modokipaas/modoki-control-panel
 
 SRCS = $(wildcard *.go)
 DIST = $(wildcard dist/*)

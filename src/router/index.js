@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store/index'
 import Dashboard from '@/components/Dashboard'
 import Containers from '@/components/Containers'
 import NotFound from '@/components/NotFound'
@@ -9,7 +10,7 @@ import Login from '@/components/Login'
 
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   routes: [
     {
       path: '/',
@@ -42,3 +43,10 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  store.commit('clearError')
+  next()
+})
+
+export default router

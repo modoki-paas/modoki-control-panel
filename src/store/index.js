@@ -7,11 +7,18 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     apiClient: null,
-    containers: []
+    containers: [],
+    error: 'error'
   },
   mutations: {
     setContainers (state, payload) {
       state.containers = payload
+    },
+    setError (state, msg) {
+      state.error = msg
+    },
+    clearError (state) {
+      state.error = ''
     }
   },
   actions: {

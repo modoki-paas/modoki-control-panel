@@ -1,11 +1,11 @@
 FROM golang:1.10-alpine as build
 
 RUN apk add --no-cache git
-RUN go get -v github.com/cs3238-tsuzu/modoki-control-panel/server
+RUN go get -v github.com/modoki-paas/modoki-control-panel/server
 
-WORKDIR /go/src/github.com/cs3238-tsuzu/modoki-control-panel/server
+WORKDIR /go/src/github.com/modoki-paas/modoki-control-panel/server
 
-COPY . /go/src/github.com/cs3238-tsuzu/modoki-control-panel/server
+COPY . /go/src/github.com/modoki-paas/modoki-control-panel/server
 RUN go get -v .
 RUN CGO_ENABLED=0 go build -o /bin/cpserver
 

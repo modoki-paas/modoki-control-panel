@@ -58,10 +58,10 @@
     <v-container fluid>
       <v-layout d-block justify-start>
         <div class="subheading">
-          <p>Thank you for using <a href="https://github.com/cs3238-tsuzu/modoki">modoki</a>!</p>
+          <p>Thank you for using <a href="https://github.com/modoki-paas/modoki">modoki</a>!</p>
           <p>This project is still in development.</p>
           <p>We welcome your contribution to this project.</p>
-          <p>The reference is <a href="https://github.com/cs3238-tsuzu/modoki">here</a></p>
+          <p>The reference is <a href="https://github.com/modoki-paas/modoki">here</a></p>
         </div>
       </v-layout>
     </v-container>

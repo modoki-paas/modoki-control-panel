@@ -13,7 +13,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/cs3238-tsuzu/modoki/consul_traefik"
+	"github.com/modoki-paas/modoki/consul_traefik"
 )
 
 const (

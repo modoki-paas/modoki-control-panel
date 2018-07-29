@@ -1,6 +1,6 @@
 # modoki control panel
 
-This is a control panel for [modoki](https://github.com/cs3238-tsuzu/modoki).
+This is a control panel for [modoki](https://github.com/modoki-paas/modoki).
 
 ## Status
 WIP
