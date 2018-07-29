@@ -10,6 +10,7 @@ import (
 	"net/http/httputil"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -102,15 +103,15 @@ func main() {
 		rw.WriteHeader(http.StatusMovedPermanently)
 	})
 
-	var fileHandler http.Handler
-
-	fileHandler = http.StripPrefix("/web/", http.FileServer(http.Dir(*dir)))
-
 	if *debug != "" {
-		fileHandler = debugHandler()
-	}
+		mux.Handle("/web/", debugHandler())
+	} else {
+		mux.Handle("/web/static/", http.StripPrefix("/web/", http.FileServer(http.Dir(*dir))))
+		mux.HandleFunc("/web/", func(rw http.ResponseWriter, req *http.Request) {
+			http.ServeFile(rw, req, filepath.Join(*dir, "index.html"))
+		})
 
-	mux.Handle("/web/", fileHandler)
+	}
 
 	server := http.Server{
 		Addr:    ":80",
