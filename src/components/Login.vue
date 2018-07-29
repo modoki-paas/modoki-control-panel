@@ -1,6 +1,5 @@
 <template>
   <v-container fluid fill-height>
-
     <v-flex xs12>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -20,10 +19,10 @@
               <v-flex xs12>
                 Choose a login method.
               </v-flex>
-              <v-flex xs12>
+              <v-flex xs12 v-if="'auth0' in this.authOptions" @click.stop="loginWithAuth0()">
                 <v-btn depressed large color="orange darken-2">Login with Auth0</v-btn>
               </v-flex>
-              <v-flex xs12>
+              <v-flex xs12 v-if="'firebase' in this.authOptions">
                 <v-btn depressed large color="amber lighten-1">Login with Firebase</v-btn>
               </v-flex>
             </v-card-text>
@@ -35,28 +34,35 @@
 </template>
 
 <script scoped>
+import AuthService from './Auth/Auth0/AuthService.js'
+
 export default {
   data () {
     return {
       name: '',
+      authOptions: {},
       loading: true
     }
   },
   created () {
     fetch('./authconfig.json').then(function (res) {
       return res.json()
-    }).then(function (res) {
-      console.log(res)
+    }).then((res) => {
+      this.authOptions = res
+      this.loading = false
     }).catch(err => {
-      console.log('auth', err)
       this.$store.commit('setError', err.toString())
     })
   },
   methods: {
     login: function () {
       this.$store.commit('setName', this.name)
-      console.log(this.$store.state.name)
       this.$router.push('/chat')
+    },
+    loginWithAuth0 () {
+      var authService = new AuthService(this.authOptions.auth0.webAuthOptions)
+
+      authService.login()
     }
   }
 }

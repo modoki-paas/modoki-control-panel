@@ -30,6 +30,8 @@
 </template>
 
 <script>
+import Auth from '../Auth'
+
 export default {
   name: 'logoutDialog',
   props: ['logoutDialog'],
@@ -51,6 +53,9 @@ export default {
   methods: {
     closeEvent: function (event) {
       this.$emit('close', event)
+      if (event === 'logout') {
+        Auth.logout()
+      }
     }
   }
 }

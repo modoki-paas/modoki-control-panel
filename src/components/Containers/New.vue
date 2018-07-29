@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import API from '@/API'
 export default {
   name: 'NewContainer',
   data () {
@@ -68,7 +69,7 @@ export default {
       this.$router.push('.')
     },
     submit: async function () {
-      var client = await this.$store.getters.apiClient
+      var client = await API.apiClient()
 
       client.apis.container.container_create({
         name: this.name,

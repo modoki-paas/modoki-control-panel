@@ -50,10 +50,10 @@
       modoki
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items>
+    <v-toolbar-items v-if="nickname.length != 0">
       <v-menu offset-y>
             <v-btn slot="activator" flat>
-              User
+              {{nickname}}
             </v-btn>
 
             <v-list>
@@ -68,24 +68,28 @@
     </v-toolbar-items>
   </v-toolbar>
   <v-content class="pt-0">
-    <v-layout column align-space-around>
-    <v-flex xs12>
-      <v-alert
-        :value="true"
-        type="error"
-        dismissible
-        v-model="errorAlertShown"
-      >
-        {{$store.state.error}}
-      </v-alert>
-    </v-flex>
+    <v-layout column fill-height>
+      <v-flex>
+        <v-alert
+          :value="true"
+          type="error"
+          dismissible
+          v-model="errorAlertShown"
+        >
+          {{$store.state.error}}
+        </v-alert>
+      </v-flex>
 
-    <v-flex xs12>
-    <v-container>
-      <router-view></router-view>
-    </v-container>
-    </v-flex>
-    </v-layout>
+      <v-flex fill-height>
+        <v-container fluid fill-height>
+          <v-layout>
+            <v-flex>
+              <router-view></router-view>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        </v-flex>
+      </v-layout>
     <logout-dialog :logoutDialog=logoutDialog @close="closeEvent"></logout-dialog>
   </v-content>
   <v-footer app>
@@ -101,6 +105,7 @@
 </template>
 
 <script type="text/babel">
+import Auth from '@/components/Auth'
 import LogoutDialog from '@/components/utils/LogoutDialog'
 
 export default {
@@ -111,13 +116,37 @@ export default {
   data () {
     return {
       drawer: false,
-      logoutDialog: false
+      logoutDialog: false,
+      nickname: ''
     }
+  },
+  created () {
+    this.nickname = this.getNickname()
+  },
+  updated () {
+    this.nickname = this.getNickname()
   },
   methods: {
     closeEvent: function (event) {
-      console.log(event)
       this.logoutDialog = false
+    },
+    getNickname () {
+      const authType = Auth.AuthType
+      const token = Auth.AccessToken
+      console.log('app', authType, token)
+
+      if (authType == null || token == null) {
+        return ''
+      }
+
+      switch (authType) {
+        case null:
+          return ''
+        case 'auth0':
+          return Auth.Payload.nickname
+        default:
+          return ''
+      }
     }
   },
   computed: {

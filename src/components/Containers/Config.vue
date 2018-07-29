@@ -35,6 +35,7 @@
 
 <script>
 import Util from '../../Util'
+import API from '@/API'
 
 export default {
   props: ['cid'],
@@ -56,7 +57,7 @@ export default {
   },
   methods: {
     async updateConfig () {
-      var client = await this.$store.getters.apiClient
+      var client = await API.apiClient()
 
       const res = await Util.asJSON(await client.apis.container.container_getConfig({id: this.cid}))
 
@@ -65,7 +66,7 @@ export default {
     async submit () {
       this.dialog = false
 
-      var client = await this.$store.getters.apiClient
+      var client = await API.apiClient()
 
       await client.apis.container.container_setConfig({
         id: this.cid,

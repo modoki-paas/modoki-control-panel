@@ -7,35 +7,48 @@ import NotFound from '@/components/NotFound'
 import NewContainer from '@/components/Containers/New'
 import Setting from '@/components/Setting'
 import Login from '@/components/Login'
+import Callback from '@/components/Callback'
+import Auth from '@/components/Auth'
 
 Vue.use(Router)
 
 var router = new Router({
+  base: '/web/',
+  mode: 'history',
   routes: [
     {
       path: '/',
       name: 'dashboard',
-      component: Dashboard
+      component: Dashboard,
+      meta: { requiresAuth: true }
     },
     {
       path: '/containers/',
       name: 'containers',
-      component: Containers
+      component: Containers,
+      meta: { requiresAuth: true }
     },
     {
       path: '/containers/new',
       name: 'newContainer',
-      component: NewContainer
+      component: NewContainer,
+      meta: { requiresAuth: true }
     },
     {
       path: '/setting',
       name: 'setting',
-      component: Setting
+      component: Setting,
+      meta: { requiresAuth: true }
     },
     {
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/callback/:type',
+      name: 'callback',
+      component: Callback
     },
     {
       path: '*',
@@ -45,6 +58,11 @@ var router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    console.log(to)
+    Auth.checkAccessToken()
+  }
+
   store.commit('clearError')
   next()
 })

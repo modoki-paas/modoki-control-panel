@@ -34,6 +34,8 @@
 </template>
 
 <script>
+import API from '@/API'
+
 export default {
   props: ['cid', 'name'],
   data: () => ({
@@ -44,7 +46,7 @@ export default {
     remove: async function () {
       this.dialog = false
 
-      var client = await this.$store.getters.apiClient
+      var client = await API.apiClient()
 
       await client.apis.container.container_remove({id: this.cid, force: this.checked})
 
