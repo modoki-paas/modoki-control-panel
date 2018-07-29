@@ -62,6 +62,7 @@
 <script>
 import ContainerConfig from '@/components/Containers/Config'
 import ContainerRemove from '@/components/Containers/Remove'
+import API from '@/API'
 
 export default {
   name: 'Containers',
@@ -70,7 +71,7 @@ export default {
     'container-remove': ContainerRemove
   },
   created: function () {
-    this.$store.dispatch('fetchContainers')
+    API.fetchContainers()
   },
   data () {
     return {

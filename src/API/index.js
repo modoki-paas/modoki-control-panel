@@ -56,7 +56,7 @@ export default new class API {
     return client
   }
 
-  async fetchContainers ({dispatch, commit, getters}) {
+  async fetchContainers () {
     try {
       var client = await this.apiClient()
 

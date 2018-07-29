@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import AuthService from './Auth/Auth0/AuthService'
+import Auth0 from './Auth/Auth0/AuthService'
+import Firebase from './Auth/Firebase/AuthService.js'
 
 export default {
   name: 'Callback',
@@ -21,12 +22,23 @@ export default {
       const json = await res.json()
 
       if (this.$route.params.type === 'auth0') {
-        var authService = new AuthService(json.auth0.webAuthOptions)
+        var authService = new Auth0(json.auth0.webAuthOptions, json.auth0.metaDataBinding)
 
-        var prom = authService.handleAuthentication()
-        const res = await prom
+        const res = await authService.handleAuthentication()
         if (res == null) {
           this.$router.push('/')
+        }
+      } else if (this.$route.params.type === 'firebase') {
+        var firebase = new Firebase(json.firebase.config, json.firebase.metaDataBinding)
+
+        try {
+          const accessToken = await firebase.handleResponse()
+
+          firebase.setSession(accessToken)
+
+          this.$router.push('/')
+        } catch (err) {
+          this.$store.commit('setError', err.toString())
         }
       } else {
         console.log('Unknown auth type:', this.$route.params.type)

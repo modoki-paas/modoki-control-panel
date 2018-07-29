@@ -61,10 +61,11 @@ export default class AuthService {
     const payload = Auth.Payload
 
     var metadata = {}
+    console.log(this.MetaDataBinding)
     for (const key in this.MetaDataBinding) {
       var t = Object.assign({}, payload)
 
-      for (var v of this.MetaDataBinding.split('.')) {
+      for (var v of this.MetaDataBinding[key].split('.')) {
         t = t[v]
       }
 

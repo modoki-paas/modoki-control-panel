@@ -107,6 +107,8 @@
 </template>
 
 <script>
+import Auth from '@/components/Auth'
+
 export default {
   name: 'Setting',
   data () {
@@ -120,7 +122,6 @@ export default {
             status: 'running'
           }
         ],
-        loading: true,
         headers: [
           { text: 'Label', sortable: false, align: 'left' },
           { text: 'Hash', sortable: false, align: 'left' },
@@ -132,16 +133,22 @@ export default {
           {text: 'Key', sortable: false},
           {text: 'Value', sortable: false}
         ],
-        loading: false,
-        data: [
-          {key: 'Name', value: 'Tsuzu'},
-          {key: 'Email', value: 'tsuzu.0623@gmail.com'},
-          {key: 'Phone', value: '080-4188-0623'},
-          {key: 'Twitter', value: '@Wp120_3238'},
-          {key: 'Grade', value: '53rd'}
-        ]
+        data: []
       }
     }
+  },
+  created () {
+    var arr = []
+
+    const metadata = Auth.MetaData
+
+    for (var key in metadata) {
+      arr.push({
+        key: key,
+        value: metadata[key]
+      })
+    }
+    this.userInfo.data = arr
   }
 }
 </script>

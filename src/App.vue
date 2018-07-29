@@ -50,10 +50,10 @@
       modoki
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items v-if="nickname.length != 0">
+    <v-toolbar-items v-if="name.length != 0">
       <v-menu offset-y>
             <v-btn slot="activator" flat>
-              {{nickname}}
+              {{name}}
             </v-btn>
 
             <v-list>
@@ -117,20 +117,20 @@ export default {
     return {
       drawer: false,
       logoutDialog: false,
-      nickname: ''
+      name: ''
     }
   },
   created () {
-    this.nickname = this.getNickname()
+    this.name = this.getName()
   },
   updated () {
-    this.nickname = this.getNickname()
+    this.name = this.getName()
   },
   methods: {
     closeEvent: function (event) {
       this.logoutDialog = false
     },
-    getNickname () {
+    getName () {
       const authType = Auth.AuthType
       const token = Auth.AccessToken
       console.log('app', authType, token)
@@ -143,7 +143,9 @@ export default {
         case null:
           return ''
         case 'auth0':
-          return Auth.Payload.nickname
+          return Auth.Payload.nickname || 'user'
+        case 'firebase':
+          return Auth.Payload.name || 'user'
         default:
           return ''
       }

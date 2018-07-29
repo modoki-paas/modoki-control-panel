@@ -70,6 +70,8 @@
 </template>
 
 <script>
+import API from '@/API'
+
 export default {
   name: 'Dashboard',
   data () {
@@ -77,7 +79,7 @@ export default {
     }
   },
   created () {
-    this.$store.dispatch('fetchContainers')
+    API.fetchContainers()
   },
   methods: {
 
