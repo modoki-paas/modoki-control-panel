@@ -65,7 +65,7 @@ export default {
     if (token == null) {
       router.replace('/login')
 
-      return
+      return null
     }
 
     const payload = this.Payload
@@ -74,6 +74,8 @@ export default {
 
     if (expiresAt < new Date().getTime()) {
       this.logout()
+
+      return null
     }
 
     return token

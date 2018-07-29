@@ -60,9 +60,9 @@ var router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     console.log(to)
-    Auth.checkAccessToken()
-
-    return
+    if (Auth.checkAccessToken() == null) {
+      return
+    }
   }
 
   store.commit('clearError')
