@@ -62,7 +62,7 @@ func main() {
 		return
 	}
 
-	var config []map[string]interface{}
+	var config map[string]interface{}
 	var jsonRawBytes []byte
 
 	if fp, err := os.Open(*authConfig); err != nil {
