@@ -39,7 +39,7 @@ import API from '@/API'
 
 export default {
   props: ['cid'],
-  created: async function () {
+  mounted: async function () {
     await this.updateConfig()
   },
   data: () => {

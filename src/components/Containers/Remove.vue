@@ -50,7 +50,7 @@ export default {
 
       await client.apis.container.container_remove({id: this.cid, force: this.checked})
 
-      this.$store.dispatch('fetchContainers')
+      API.fetchContainers()
     }
   }
 }

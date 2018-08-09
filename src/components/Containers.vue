@@ -9,7 +9,7 @@
       <h1>Containers</h1>
       <v-btn
         icon
-        @click.stop="$store.dispatch('fetchContainers')"
+        @click.stop="fetchContainers()"
         >
         <v-icon>cached</v-icon>
       </v-btn>
@@ -91,6 +91,9 @@ export default {
     containers: function () {
       return this.$store.state.containers
     }
+  },
+  methods: {
+    fetchContainers: () => API.fetchContainers()
   }
 }
 
