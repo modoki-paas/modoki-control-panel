@@ -7,7 +7,7 @@
       <h1>New Container</h1>
     </v-layout>
 
-    <v-form v-model="valid" @submit="submit()">
+    <v-form>
     <v-text-field
       v-model="name"
       :counter="64"
@@ -28,7 +28,7 @@
       label="Entrypoint(optional, split with ',')"
     ></v-text-field>
     <v-text-field
-      v-model="workDir"
+      v-model="workingDir"
       label="Working Directory(optional)"
     ></v-text-field>
     <v-text-field
@@ -36,7 +36,7 @@
       label="Environment Variables(optional, split with ',')"
     ></v-text-field>
     <v-text-field
-      v-model="vol"
+      v-model="volumes"
       label="Volumes(optional, split with ',')"
     ></v-text-field>
     <v-checkbox
@@ -44,12 +44,15 @@
       label="Always SSL"
       required
     ></v-checkbox>
+    <v-btn @click="submit()">create</v-btn>
   </v-form>
   </v-container>
 </template>
 
 <script>
 import API from '@/API'
+import Util from '@/Util'
+
 export default {
   name: 'NewContainer',
   data () {
@@ -58,9 +61,9 @@ export default {
       image: '',
       command: '',
       entrypoint: '',
-      workDir: '',
+      workingDir: '',
       env: '',
-      vol: '',
+      volumes: '',
       sslRedirect: true
     }
   },
@@ -71,11 +74,38 @@ export default {
     submit: async function () {
       var client = await API.apiClient()
 
-      client.apis.container.container_create({
-        name: this.name,
-        image: this.image,
-        command: this.command.split(',')
-      })
+      var options = Object.assign({}, this.$data)
+
+      const validateArray = function (val) {
+        if (options[val] !== '') {
+          options[val] = options[val].split(',')
+        } else {
+          delete options[val]
+        }
+      }
+      const validate = function (val) {
+        if (options[val] === '') {
+          delete options[val]
+        }
+      }
+
+      validateArray('command')
+      validateArray('entrypoint')
+      validateArray('env')
+      validateArray('volumes')
+
+      validate('workingDir')
+
+      client
+        .apis
+        .container
+        .container_create(options)
+        .then(res => this.$router.push('/containers'))
+        .catch(err => {
+          return Util.asJSON(err.response)
+        }).then(resp => {
+          this.$store.commit('setError', resp.detail)
+        }).catch(err => this.$store.commit('setError', err))
     }
   }
 

@@ -38,8 +38,18 @@
               <v-icon
                 small
                 class="mr-2"
+                v-if="props.item.status==='Stopped' || props.item.status==='Created'"
+                @click="start(props.item.id)"
               >
                 play_arrow
+              </v-icon>
+              <v-icon
+                small
+                class="mr-2"
+                v-if="props.item.status==='Running'"
+                @click="stop(props.item.id)"
+              >
+                pause
               </v-icon>
               <container-config :cid="props.item.id"></container-config>
               <v-icon
@@ -93,7 +103,25 @@ export default {
     }
   },
   methods: {
-    fetchContainers: () => API.fetchContainers()
+    fetchContainers: () => API.fetchContainers(),
+    async start (id) {
+      var client = await API.apiClient()
+
+      client.apis
+        .container
+        .container_start({id})
+        .then(res => API.fetchContainers())
+        .catch(err => this.$store.commit('setError', err.toString()))
+    },
+    async stop (id) {
+      var client = await API.apiClient()
+
+      client.apis
+        .container
+        .container_stop({id})
+        .then(res => API.fetchContainers())
+        .catch(err => this.$store.commit('setError', err.toString()))
+    }
   }
 }
 
